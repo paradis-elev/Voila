@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voila! – Online Clothing Marketplace</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+            background-color: #f7f1e3; /* light beige */
+            color: #000;
+        }
+
+        button, input, select {
+            font-family: "Times New Roman", serif;
+        }
+
+        /* HEADER */
+        header {
+            background-color: #3d2b1f;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #f7f1e3;
+        }
+
+        nav a {
+            color: #f7f1e3;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 20px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* SEARCH BAR */
+        #searchBar {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #3d2b1f;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* CATEGORY FILTERS */
+        #categorySelect {
+            padding: 10px;
+            border: 1px solid #3d2b1f;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background-color: #e8dbc6;
+        }
+
+        .hero h1 {
+            font-size: 58px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: auto;
+            margin-bottom: 25px;
+        }
+
+        .hero button {
+            background-color: #000;
+            color: #f7f1e3;
+            padding: 15px 35px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .hero button:hover {
+            opacity: 0.85;
+        }
+
+        /* PRODUCTS */
+        .section-title {
+            text-align: center;
+            font-size: 40px;
+            margin-top: 40px;
+        }
+
+        .filters {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .products {
+            padding: 40px;
+            display: grid;
+            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .product-card {
+            background-color: #fff;
+            border: 2px solid #3d2b1f;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .product-card h3 {
+            margin-top: 10px;
+            font-size: 23px;
+        }
+
+        .product-card p {
+            font-size: 18px;
+        }
+
+        .product-card button {
+            width: 100%;
+            background-color: #3d2b1f;
+            color: #f7f1e3;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        /* CART PANEL */
+        #cartPanel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100%;
+            background-color: #f7f1e3;
+            border-left: 4px solid #3d2b1f;
+            padding: 20px;
+            transition: 0.4s;
+            overflow-y: auto;
+        }
+
+        #cartPanel.open {
+            right: 0;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #3d2b1f;
+            padding: 10px 0;
+        }
+
+        /* CHECKOUT PAGE */
+        #checkoutPage {
+            display: none;
+            background-color: #f7f1e3;
+            padding: 40px;
+        }
+
+        #checkoutPage h2 {
+            font-size: 32px;
+        }
+
+        /* LOGIN / REGISTER MODALS */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border: 3px solid #3d2b1f;
+            padding: 25px;
+            width: 350px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .modal input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #3d2b1f;
+        }
+
+        .modal button {
+            background-color: #3d2b1f;
+            color: #f7f1e3;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #3d2b1f;
+            color: #f7f1e3;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div style="font-size:35px;font-weight:bold;">Voila!</div>
+        <nav>
+            <a href="#" onclick="scrollToProducts()">Shop</a>
+            <a href="#" onclick="openLogin()">Login</a>
+            <a href="#" onclick="openRegister()">Register</a>
+            <a href="#" onclick="toggleCart()">Cart 🛒 (<span id="cartCount">0</span>)</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Discover Elegant Fashion</h1>
+        <p>Welcome to Voila! Your curated marketplace for stylish apparel and accessories.</p>
+        <button onclick="scrollToProducts()">Shop Now</button>
+    </section>
+
+    <!-- SEARCH + FILTERS -->
+    <div class="filters">
+        <input type="text" id="searchBar" placeholder="Search products..." onkeyup="filterProducts()">
+        <select id="categorySelect" onchange="filterProducts()">
+            <option value="all">All Categories</option>
+            <option value="women">Women</option>
+            <option value="men">Men</option>
+            <option value="accessories">Accessories</option>
+        </select>
+    </div>
+
+    <!-- PRODUCTS -->
+    <h2 class="section-title">Featured Products</h2>
+
+    <section class="products" id="products"></section>
+
+    <!-- CART PANEL -->
+    <aside id="cartPanel">
+        <h2>Your Cart</h2>
+        <div id="cartItems"></div>
+        <h3>Total: $<span id="cartTotal">0.00</span></h3>
+        <button onclick="goToCheckout()" style="width:100%; margin-top:10px;">Go to Checkout</button>
+    </aside>
+
+    <!-- CHECKOUT PAGE -->
+    <section id="checkoutPage">
+        <h2>Checkout</h2>
+        <p>Please enter your details:</p>
+        <input type="text" placeholder="Full Name"><br><br>
+        <input type="text" placeholder="Address"><br><br>
+        <input type="text" placeholder="Card Number"><br><br>
+        <button>Complete Order</button>
+        <button onclick="closeCheckout()" style="background:black;color:white;margin-left:10px;">Cancel</button>
+    </section>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Login</button>
+            <button onclick="closeLogin()" style="background:black;margin-top:15px;">Close</button>
+        </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <h2>Register</h2>
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Create Account</button>
+            <button onclick="closeRegister()" style="background:black;margin-top:15px;">Close</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2025 Voila! — All rights reserved.
+    </footer>
+
+    <!-- MOCK API + LOGIC -->
+    <script>
+        /* PRODUCT DATABASE */
+        const productsAPI = [
+            {
+                name: "Flowy Summer Dress",
+                price: 799.99,
+                category: "women",
+                img: "https://img1.theiconic.com.au/2LtDGcmo8f8izajVzE7Hasvcv2g=/fit-in/406x512/filters:fill(ffffff):quality(90):format(webp)/https%3A%2F%2Fstatic.theiconic.com.au%2Fp%2Fatmos-here-3303-9949062-1.jpg"
+            },
+            {
+                name: "Brown Leather Jacket",
+                price: 1999.99,
+                category: "men",
+                img: "https://www.danezon.com/wp-content/uploads/2024/07/Womens-Brown-Bomber-Jacket-Faux-Leather-Oversized-1.webp"
+            },
+            {
+                name: "Beige Linen Shirt",
+                price: 59.99,
+                category: "men",
+                img: "https://via.placeholder.com/300x350?text=Linen+Shirt"
+            },
+            {
+                name: "Classic Black Trousers",
+                price: 89.99,
+                category: "women",
+                img: "https://via.placeholder.com/300x350?text=Trousers"
+            },
+            {
+                name: "Handmade Bracelet",
+                price: 29.99,
+                category: "accessories",
+                img: "https://via.placeholder.com/300x350?text=Bracelet"
+            }
+        ];
+
+        /* LOAD PRODUCTS */
+        function loadProducts() {
+            const container = document.getElementById("products");
+            container.innerHTML = "";
+
+            productsAPI.forEach(p => {
+                container.innerHTML += `
+                    <div class="product-card" data-name="${p.name.toLowerCase()}" data-category="${p.category}">
+                        <img src="${p.img}">
+                        <h3>${p.name}</h3>
+                        <p>$${p.price.toFixed(2)}</p>
+                        <button onclick="addToCart('${p.name}', ${p.price})">Add to Cart</button>
+                    </div>
+                `;
+            });
+        }
+
+        loadProducts();
+
+        /* FILTERS */
+        function filterProducts() {
+            const search = document.getElementById("searchBar").value.toLowerCase();
+            const category = document.getElementById("categorySelect").value;
+
+            document.querySelectorAll(".product-card").forEach(card => {
+                const name = card.dataset.name;
+                const cat = card.dataset.category;
+
+                const matchesSearch = name.includes(search);
+                const matchesCategory = (category === "all" || category === cat);
+
+                card.style.display = (matchesSearch && matchesCategory) ? "block" : "none";
+            });
+        }
+
+        /* SCROLL */
+        function scrollToProducts() {
+            document.getElementById("products").scrollIntoView({behavior: "smooth"});
+        }
+
+        /* CART SYSTEM */
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCart();
+        }
+
+        function updateCart() {
+            document.getElementById("cartCount").textContent = cart.length;
+
+            let html = "";
+            let total = 0;
+
+            cart.forEach(item => {
+                html += `<div class="cart-item"><strong>${item.name}</strong> - $${item.price.toFixed(2)}</div>`;
+                total += item.price;
+            });
+
+            document.getElementById("cartItems").innerHTML = html;
+            document.getElementById("cartTotal").textContent = total.toFixed(2);
+        }
+
+        function toggleCart() {
+            document.getElementById("cartPanel").classList.toggle("open");
+        }
+
+        /* CHECKOUT */
+        function goToCheckout() {
+            document.getElementById("checkoutPage").style.display = "block";
+            document.getElementById("cartPanel").classList.remove("open");
+        }
+
+        function closeCheckout() {
+            document.getElementById("checkoutPage").style.display = "none";
+        }
+
+        /* AUTH MODALS */
+        function openLogin() {
+            document.getElementById("loginModal").style.display = "flex";
+        }
+        function closeLogin() {
+            document.getElementById("loginModal").style.display = "none";
+        }
+
+        function openRegister() {
+            document.getElementById("registerModal").style.display = "flex";
+        }
+        function closeRegister() {
+            document.getElementById("registerModal").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
